@@ -1,0 +1,25 @@
+<!-- 詳細(show)画面のview -->
+
+<!-- successメッセージの表示。画面上部 -->
+<!-- controllerの内容を受ける。 -->
+<!-- create , update とも 詳細(show)画面でメッセージを表示する。 -->
+<%= flash[:notice] %>
+
+
+
+
+<p><strong>Title:<strong> <%= @book.title %></p>
+
+<p><strong>Body:<strong> <%= @book.body %></p>
+
+
+<!-- 編集(edit)画面への、リンクを貼る。 -->
+
+<!-- link_to "①テキスト", "②URL"やパス 3,option(metod: :delete)など- ->
+<!-- link_to は、デフォルトでHTTPメソッドがGETに注意。-->
+<!-- @book に注意。bookはエラー。 色々参照されてOKなのはinstance変数。 -->
+<%= link_to "Edit", edit_book_path(@book.id) %> |
+
+<!-- 前の(back)画面【今回は、index画面】への、リンクを貼る。-->
+<!-- books_path は、:back でもOK。 -->
+<%= link_to "Back", books_path %>

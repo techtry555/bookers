@@ -1,0 +1,108 @@
+<!-- indexのview -->
+
+<!-- ①まず、一覧(index)画面の記述。 -->
+<h1>Books</h1>
+
+  <!-- 表を作成するタグ -->
+  <table>
+
+    <!-- tableの表組みのヘッダー部分の行(水平)グループ、t=table。 -->
+    <thead>
+
+      <!-- tableの1つの行、r=row。 -->
+      <tr>
+
+        <!--　tableの見出し、h=deader。 -->
+        <th>Title</th>
+        <th>Body</th>
+
+        <!-- colspan属性は、水平方向の見出しセルの結合数を設定する。 -->
+        <th colspan = "3"></th>
+
+      </tr>
+    </thead>
+
+    <!-- tableの表組みの本体部分の行(水平)グループ、t=table。 -->
+    <tbody>
+      <!-- instance変数を受け取り、その内容を1つずつ順に取得し処理。それをブロック変数bookに格納。-->
+      <% @books.each do |book| %>
+
+        <tr>
+          <!-- tableのセルの内容、d=data。 -->
+          <td><%= book.title %></td>
+          <td><%= book.body %></td>
+
+          <td>
+            <!-- link_toメソッドで、テキストとリンク先パスを記述。 -->
+            <!-- resourcesの一括routing設定より、 -->
+            <!-- 【book】と【edit_book】に_pathヘルパー付けてhelperメソッドとして利用。-->
+            <!-- book.id のbook は、ブロッック変数book から。-->
+            <%= link_to "Show", book_path(book.id) %>
+            <%= link_to "Edit", edit_book_path(book.id) %>
+            <%= link_to "Destroy", book_path(book.id), method: :delete, "data-confirm" => "Are you sure?" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+
+
+
+
+<!-- ②次に、新規(new)投稿画面の記述。 -->
+<h2>New book</h2>
+
+
+<!-- 【バリデーション】を追加する。 (表示するviewに追記、今回はindexのview。) -->
+<!-- updateにもバリデーション設定をするから、後で、showのviewにも同様に記述する。 -->
+<!-- エラーが発生したか? の判定メソッド。 -->
+<!-- もし、エラーがある場合 -->
+<% if @book.errors.any? %>
+
+  <!-- (文章をブロックに) 区分けして、修正しやすくした。 -->
+  <!-- divisionの略。区分、の意味。-->
+  <!-- divタグは、ブロック要素 (前後に改行が入る様な要素) として、 -->
+  <!-- spanタグは、インライン要素 (前後に改行が入らない様な要素) として定義されている。 -->
+  <div>
+
+    <!-- エラーメッセージの件数を表示する。 '件'の後に表示する文を追加記述。 -->
+    <%= @book.errors.count %> errors prohibited this book from being saved:
+
+    <!--　中黒の形を四角に修正。 -->
+    <ul type = "squar" >
+
+      <!-- 全てのエラーメッセージを配列で取得する。 -->
+      <!-- 複数エラー文の可能性があるので、eachで処理。 -->
+      <!-- |message| は、block変数messageにdo~end (各エラー文の内容) が格納されている。-->
+      <% @book.errors.full_messages.each do |message| %>
+
+        <!-- list itemの略。リスト項目の記述に使用。 -->
+        <!--　エラー文を画面に表示する。-->
+        <li><%= message %></li>
+
+      <% end %>
+
+    </ul>
+  </div>
+<% end %>
+
+
+
+<!-- form_with部分 -->
+<!-- (空のobjectが格納されている) instance変数@bookを渡し、その情報を元に処理、変数fに格納。-->
+<!-- Ajax通信は、local:true で同期通信の設定。-->
+<%= form_with model: @book, local:true do |f| %>
+
+  <h4>Title</h4>
+
+  <%= f.text_field :title %>
+
+  <h4>Body</h4>
+  <%= f.text_area :body %>
+
+  <h2>
+    <%= f.submit 'Create Book' %>
+  </h2>
+
+<% end %>

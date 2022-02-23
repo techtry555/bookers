@@ -1,0 +1,73 @@
+<!-- 編集(edit)画面のview -->
+<h1>Editing Book</h1>
+
+
+<!-- 【バリデーション】を追加する。 (表示するviewに追記、今回は編集(edit)画面のview。) -->
+<!-- view で、バリデーションのエラー文を表示する。 -->
+<!-- エラーが発生したか? の判定メソッド。 -->
+<!-- もし、エラーがある場合-->
+<% if @book.errors.any? %>
+
+  <!-- (文章をブロックに) 区分けして、修正しやすくした。 -->
+  <!-- divisionの略。区分。-->
+  <div>
+
+    <!-- エラーメッセージの件数を表示する。 '件'の後に表示する文を追加記述。 -->
+    <%= @book.errors.count %> errors prohibited this book from being saved:
+
+    <!-- 中黒の形を四角に修正。 -->
+    <ul type = "squar" >
+
+      <!-- 全てのエラーメッセージを配列で取得する。 -->
+      <!-- 複数エラー文の可能性があるので、eachで処理。 -->
+      <% @book.errors.full_messages.each do |message| %>
+
+        <!-- list itemの略。リスト項目の記述に使用。 -->
+        <!--　エラー文を画面に表示する。-->
+        <li><%= message %></li>
+
+      <% end %>
+
+    </ul>
+
+  </div>
+<% end %>
+
+
+
+
+<!-- form_withヘルパーで自動代入。 -->
+<%= form_with model: @book, url: book_path(@book.id), method: :patch, local:true do |f| %>
+
+  <!-- 見出しh4-->
+  <h4>Title</h4>
+
+
+  <!-- block関数fを用いて、その単一行テキストを作る。-->
+  <!-- text_field などを、modelオブジェクトと言う。-->
+  <!-- それは、タイトルや本文と言った、部品を作成するヘルパーの事。 -->
+
+  <!-- 【変数.ヘルバー】で、ヘルパーメソッドとなり、使用できる。 -->
+
+  <!-- Listモデルの情報を含むblock関数f は、property(プロパティ)を :title とするで、 -->
+  <!-- Listモデルの管理するtitleカラムと判別することができ、安全にDBに保存できる。-->
+
+  <%= f.text_field :title %>
+
+  <h4>Body</h4>
+  <!-- block関数fを用いて、その複数行テキストを作る。-->
+  <%= f.text_area :body %>
+
+  <h2>
+    <%= f.submit 'Update Book' %>
+  </h2>
+
+  <!-- 詳細(show)画面へのリンクを貼る。 -->
+  <!-- 区分けの | は、%>後に追加。 -->
+  <%= link_to "Show", book_path %> |
+
+  <!-- 前の(back)画面【今回は、index画面】への、リンクを貼る。-->
+  <!-- books_path は、:back でもOK。 -->
+  <%= link_to "Back", books_path %>
+
+<% end %>
